@@ -38,11 +38,11 @@ app.use(flash());
 //處理表單及文件上傳的中間件
 app.use(require('express-formidable')({
     uploadDir: path.join(__dirname, 'public/img'),//上傳文件目錄
-    keepExtentions:true//保留後綴
+    keepExtentions: true//保留後綴
 }));
 
 //设置模板全局常量
- app.locals.blog = {
+app.locals.blog = {
     title: '無火的餘灰',
     description: pkg.description
 };
@@ -83,11 +83,21 @@ app.use(expressWinston.errorLogger({
 }));
 
 //error page
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     res.render('error', {
         error: err
     });
 });
-app.listen(config.port, function() {
-    console.log(pkg.name + ' listening on port ' + config.port);
-});
+
+if (module.parent) {
+    module.exports = app;
+} else {
+    //監聽端口，啓動程序
+    app.listen(config.port, function () {
+        console.log(pkg.name + ' listening on port ' + config.port);
+    });
+}
+
+
+
+
